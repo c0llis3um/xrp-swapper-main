@@ -180,3 +180,8 @@ body.daytheme {
   background: white!important;
   color: black!important;
 }
+@media only screen and (max-width: 600px) {
+  input[type="text" ] {
+      width: 65%;
+  }
+}
