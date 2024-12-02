@@ -1,63 +1,107 @@
-const API_URL = 'https://s.altnet.rippletest.net:51234'; // Replace with appropriate API
-let transactions = [];
-let currentPage = 1;
-const pageSize = 10;
+import xrpl from 'xrpl';
 
-// DOM elements
-const tableBody = document.querySelector("#transactions-table tbody");
-const pageInfo = document.querySelector("#page-info");
-const prevPageBtn = document.querySelector("#prev-page");
-const nextPageBtn = document.querySelector("#next-page");
+let wallet = null;
 
-async function fetchTransactions() {
+// Connect Wallet
+document.getElementById('connect-wallet').addEventListener('click', async () => {
+  const secret = prompt("Enter your XRP wallet secret:");
+  if (!secret) return alert("No secret provided.");
+
   try {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    transactions = data.transactions; // Adjust based on API response
-    renderTable();
+    wallet = xrpl.Wallet.fromSeed(secret);
+    updateWalletDetails();
   } catch (error) {
-    console.error("Error fetching transactions:", error);
-    tableBody.innerHTML = `<tr><td colspan="4">Error loading data.</td></tr>`;
-  }
-}
-
-function renderTable() {
-  const start = (currentPage - 1) * pageSize;
-  const end = start + pageSize;
-  const pageTransactions = transactions.slice(start, end);
-
-  tableBody.innerHTML = pageTransactions
-    .map(tx => `
-      <tr>
-        <td>${tx.hash}</td>
-        <td>${tx.account}</td>
-        <td>${(tx.amount / 1_000_000).toFixed(6)}</td> <!-- Assuming drops -->
-        <td>${new Date(tx.date).toLocaleString()}</td>
-      </tr>
-    `)
-    .join('');
-
-  pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(transactions.length / pageSize)}`;
-  prevPageBtn.disabled = currentPage === 1;
-  nextPageBtn.disabled = currentPage === Math.ceil(transactions.length / pageSize);
-}
-
-prevPageBtn.addEventListener("click", () => {
-  if (currentPage > 1) {
-    currentPage--;
-    renderTable();
+    alert("Invalid wallet secret.");
   }
 });
 
-nextPageBtn.addEventListener("click", () => {
-  if (currentPage < Math.ceil(transactions.length / pageSize)) {
-    currentPage++;
-    renderTable();
-  }
+// Create Wallet
+document.getElementById('create-wallet').addEventListener('click', async () => {
+  const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+  await client.connect();
+
+  wallet = xrpl.Wallet.generate();
+  updateWalletDetails();
+
+  alert(`New wallet created!\nAddress: ${wallet.address}\nSecret: ${wallet.seed}`);
+  client.disconnect();
 });
 
-// Refresh data every minute
-setInterval(fetchTransactions, 60 * 1000);
+// Fetch Balance
+async function fetchBalance() {
+  if (!wallet) return;
 
-// Initial fetch
-fetchTransactions();
+  const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+  await client.connect();
+
+  const response = await client.request({
+    command: "account_info",
+    account: wallet.address,
+    ledger_index: "validated"
+  });
+
+  document.getElementById('balance').innerText = `Balance: ${xrpl.dropsToXrp(response.result.account_data.Balance)} XRP`;
+  client.disconnect();
+}
+
+// Fetch Transactions
+async function fetchTransactions() {
+  if (!wallet) return;
+
+  const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+  await client.connect();
+
+  const response = await client.request({
+    command: "account_tx",
+    account: wallet.address,
+    ledger_index_min: -1,
+    ledger_index_max: -1,
+    limit: 10
+  });
+
+  const transactions = response.result.transactions;
+  const transactionList = document.getElementById('transaction-list');
+  transactionList.innerHTML = transactions.map(tx => `
+    <tr>
+      <td>${tx.tx.hash}</td>
+      <td>${tx.tx.TransactionType}</td>
+      <td>${xrpl.dropsToXrp(tx.tx.Amount || 0)}</td>
+      <td><a href="https://xrpscan.com/tx/${tx.tx.hash}" target="_blank">View</a></td>
+    </tr>
+  `).join('');
+
+  client.disconnect();
+}
+
+// Swap XRP
+document.getElementById('swap-button').addEventListener('click', async () => {
+  const tokenAddress = document.getElementById('token-address').value;
+  const swapAmount = document.getElementById('swap-amount').value;
+
+  if (!tokenAddress || !swapAmount) {
+    return alert("Please provide token address and amount.");
+  }
+
+  const client = new xrpl.Client('wss://s.altnet.rippletest.net:51233');
+  await client.connect();
+
+  const prepared = await client.autofill({
+    TransactionType: "Payment",
+    Account: wallet.address,
+    Destination: tokenAddress,
+    Amount: xrpl.xrpToDrops(swapAmount)
+  });
+
+  const signed = wallet.sign(prepared);
+  const response = await client.submitAndWait(signed.tx_blob);
+
+  document.getElementById('swap-status').innerText = `Swap ${response.resultCode === "tesSUCCESS" ? "successful" : "failed"}.`;
+  client.disconnect();
+});
+
+// Update Wallet Details
+function updateWalletDetails() {
+  document.getElementById('wallet-details').innerText = `Address: ${wallet.address}`;
+  fetchBalance();
+  fetchTransactions();
+}
