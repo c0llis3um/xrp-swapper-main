@@ -144,6 +144,16 @@ margin-top: 10px;
     box-shadow: 1px 0px 8px 0px #157ca0;
     width: 51%;
 }
+    input[type="number" ] {
+margin-top: 10px;
+ color: white;
+    padding: 18px 52px;
+    border-radius: 5px;
+        background: #172931;
+    border: 0px solid #eaeaea;
+    box-shadow: 1px 0px 8px 0px #157ca0;
+    width: 51%;
+}
 a{
   color: #00daff;
     text-decoration: none;
