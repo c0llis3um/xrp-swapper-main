@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XRP Token Minting</title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+<link href="https://fonts.googleapis.com/css2?family=Exo:wght@300&display=swap" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/xrpl@2.8.0/dist/xrpl.min.js"></script>
+
+</head>
+<body>
+  <h1>XRP Token Minting Tool</h1>
+  <div class="form-group">
+    <label for="issuer-secret">Issuer Wallet Secret (Seed):</label>
+    <input type="text" id="issuer-secret" placeholder="Enter issuer wallet secret" required>
+  </div>
+
+  <div class="form-group">
+    <label for="token-name">Token Name:</label>
+    <input type="text" id="token-name" placeholder="Enter token name" required>
+  </div>
+
+  <div class="form-group">
+    <label for="token-symbol">Token Symbol:</label>
+    <input type="text" id="token-symbol" placeholder="Enter token symbol (e.g., TKN)" required>
+  </div>
+
+  <div class="form-group">
+    <label for="total-supply">Total Supply:</label>
+    <input type="number" id="total-supply" placeholder="Enter total supply (e.g., 1000)" required>
+  </div>
+
+  <div class="form-group">
+    <label for="decimals">Decimals:</label>
+    <input type="number" id="decimals" placeholder="Enter number of decimals (e.g., 6)" value="6" required>
+  </div>
+
+  <div class="form-group">
+    <label for="metadata">Metadata (Optional):</label>
+    <textarea id="metadata" placeholder="Enter additional information about your token"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="flags">Flags:</label>
+    <select id="flags" multiple>
+      <option value="transferable">Transferable</option>
+      <option value="burnable">Burnable</option>
+      <option value="issuance">Restrict Issuance</option>
+    </select>
+  </div>
+
+  <button id="mint-token">Mint Token</button>
+  <pre class="output" id="output">Output will appear here...</pre>
+
+  <script>
+    const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233"); // Testnet client
+
+    async function connectClient() {
+      if (!client.isConnected()) {
+        await client.connect();
+      }
+    }
+
+    async function mintToken() {
+      const issuerSecret = document.getElementById("issuer-secret").value;
+      const tokenName = document.getElementById("token-name").value;
+      const tokenSymbol = document.getElementById("token-symbol").value;
+      const totalSupply = document.getElementById("total-supply").value;
+      const decimals = document.getElementById("decimals").value;
+      const metadata = document.getElementById("metadata").value;
+      const selectedFlags = Array.from(document.getElementById("flags").selectedOptions).map(
+        (option) => option.value
+      );
+
+      if (!issuerSecret || !tokenName || !tokenSymbol || !totalSupply || !decimals) {
+        document.getElementById("output").textContent = "All required fields must be filled.";
+        return;
+      }
+
+      try {
+        await connectClient();
+
+        const issuerWallet = xrpl.Wallet.fromSeed(issuerSecret);
+
+        // Token creation transaction
+        const tokenTx = {
+          TransactionType: "TrustSet",
+          Account: issuerWallet.address,
+          LimitAmount: {
+            currency: tokenSymbol,
+            issuer: issuerWallet.address,
+            value: totalSupply,
+          },
+          Memos: [
+            {
+              Memo: {
+                MemoData: xrpl.convertStringToHex(metadata || `Token: ${tokenName}`),
+              },
+            },
+          ],
+        };
+
+        // Apply flags if selected
+        if (selectedFlags.includes("burnable")) {
+          tokenTx.Flags |= xrpl.TransactionFlags.TrustSet.tfBurnable;
+        }
+        if (selectedFlags.includes("transferable")) {
+          tokenTx.Flags |= xrpl.TransactionFlags.TrustSet.tfTransferable;
+        }
+        if (selectedFlags.includes("issuance")) {
+          tokenTx.Flags |= xrpl.TransactionFlags.TrustSet.tfRestrictIssuance;
+        }
+
+        // Autofill and sign
+        const prepared = await client.autofill(tokenTx);
+        const signed = issuerWallet.sign(prepared);
+
+        // Submit transaction
+        const result = await client.submitAndWait(signed.tx_blob);
+
+        if (result.result.meta.TransactionResult === "tesSUCCESS") {
+          document.getElementById("output").textContent = `Token minted successfully!\nToken Name: ${tokenName}\nSymbol: ${tokenSymbol}\nTransaction Hash: ${result.result.tx_json.hash}`;
+        } else {
+          document.getElementById("output").textContent = `Token minting failed: ${result.result.meta.TransactionResult}`;
+        }
+      } catch (error) {
+        document.getElementById("output").textContent = `Error: ${error.message}`;
+      }
+    }
+
+    document.getElementById("mint-token").addEventListener("click", mintToken);
+  </script>
+</body>
+</html>
