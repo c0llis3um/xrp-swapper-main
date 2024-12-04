@@ -9,11 +9,18 @@ font-family: 'Exo', sans-serif;
     font-family: 'Exo', sans-serif;
     font-weight: bold;
   }
+  table{
+    font-size: 11px;
+    width: 100%;
+  }
 .logo{
   filter: invert(1);
 }
   .theme-sel
   {
+    position: absolute;
+    right: 10px;
+    top: 10px;
     display: block;
     width: 57px;
     height: 26px;
