@@ -23,9 +23,8 @@
 <body>
 
   <nav>
-    <li>
-      <i class="fa fa-wallet">Crear Cartera</i>
-    </li>
+  <button id="create-wallet">Crear Cartera</button>
+  <pre id="output"></pre>
   </nav>
 
     <div>
@@ -103,6 +102,15 @@
     <button id="next-page">Next</button>
   </div>
 
+
+
+  <script>
+    document.getElementById('create-wallet').addEventListener('click', () => {
+      const wallet = xrpl.Wallet.generate();
+      document.getElementById('output').textContent = `Address: ${wallet.address}\nSecret: ${wallet.seed}`;
+      alert(`New wallet created!\n\nAddress: ${wallet.address}\nSecret: ${wallet.seed}`);
+    });
+  </script>
   <script src="app.js"></script>
 
     <script type="text/javascript">
