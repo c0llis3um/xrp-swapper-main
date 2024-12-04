@@ -24,7 +24,8 @@
 
   <nav>
   <button id="create-wallet">Crear Cartera</button>
-  <pre id="output"></pre>
+   <button id="import-wallet">Import Wallet</button>
+
   </nav>
 
     <div>
@@ -43,7 +44,7 @@
       <section>
         <div class="content-inputs">
           <h1>Envia Dinero a Mexico</h1>
-          
+            <pre id="output"></pre>
   <h2>US RLUSD</h2>
   <div class="converter">
         <label for="usdInput">Enter Amount in USD:</label>
@@ -101,31 +102,81 @@
     <span id="page-info"></span>
     <button id="next-page">Next</button>
   </div>
-
-
-
   <script>
-    document.getElementById('create-wallet').addEventListener('click', () => {
+    const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233"); // Testnet client
+
+    async function connectClient() {
+      if (!client.isConnected()) {
+        await client.connect();
+      }
+    }
+
+    async function displayWalletDetails(wallet, status) {
+      await connectClient();
+
+      try {
+        // Fetch account info from the XRPL
+        const accountInfo = await client.request({
+          command: "account_info",
+          account: wallet.address,
+          ledger_index: "validated",
+        });
+
+        const balance = accountInfo.result.account_data.Balance;
+        document.getElementById("output").textContent = `
+          Status: ${status}
+          Wallet Address: ${wallet.address}
+          Wallet Secret: ${wallet.seed}
+          XRP Balance: ${xrpl.dropsToXrp(balance)} XRP
+        `;
+      } catch (error) {
+        document.getElementById("output").textContent = `
+          Status: ${status}
+          Wallet Address: ${wallet.address}
+          Wallet Secret: ${wallet.seed}
+          XRP Balance: Unable to fetch (Wallet may not be funded)
+        `;
+      }
+    }
+
+    // Create Wallet Functionality
+    document.getElementById("create-wallet").addEventListener("click", async () => {
       const wallet = xrpl.Wallet.generate();
-      document.getElementById('output').textContent = `Address: ${wallet.address}\nSecret: ${wallet.seed}`;
-      alert(`New wallet created!\n\nAddress: ${wallet.address}\nSecret: ${wallet.seed}`);
+      await displayWalletDetails(wallet, "Created");
+
+      alert(`New wallet created!\n\nWallet Address: ${wallet.address}\nWallet Secret: ${wallet.seed}\n\nIMPORTANT: Save your wallet secret securely.`);
+
+      // Hide the "Create Wallet" button after creation
+      document.getElementById("create-wallet").style.display = "none";
+    });
+
+    // Import Wallet Functionality
+    document.getElementById("import-wallet").addEventListener("click", async () => {
+      const secret = prompt("Enter your wallet secret:");
+      if (!secret) {
+        alert("No secret provided.");
+        return;
+      }
+
+      try {
+        const wallet = xrpl.Wallet.fromSeed(secret);
+        await displayWalletDetails(wallet, "Imported");
+
+        alert(`Wallet imported successfully!\n\nWallet Address: ${wallet.address}`);
+      } catch (error) {
+        alert("Invalid wallet secret. Please try again.");
+      }
     });
   </script>
+
   <script src="app.js"></script>
 
     <script type="text/javascript">
       //whoosh 2020
 
-
-
-
-
  $(document).ready(function() {
-   
-
      var d = new Date();
       document.getElementById("location").innerHTML = d;
-
 
    $("#day-theme").click(function(){
       $('body').addClass('daytheme')
