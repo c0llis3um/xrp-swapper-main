@@ -25,6 +25,7 @@
   <nav>
   <button id="create-wallet">Crear Cartera</button>
    <button id="import-wallet">Import Wallet</button>
+     <button id="send-xrp" disabled>Send XRP</button>
 
   </nav>
 
@@ -104,6 +105,7 @@
   </div>
   <script>
     const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233"); // Testnet client
+    let currentWallet = null; // Store the currently active wallet
 
     async function connectClient() {
       if (!client.isConnected()) {
@@ -129,6 +131,10 @@
           Wallet Secret: ${wallet.seed}
           XRP Balance: ${xrpl.dropsToXrp(balance)} XRP
         `;
+
+        // Enable the "Send XRP" button after wallet is created or imported
+        document.getElementById("send-xrp").disabled = false;
+
       } catch (error) {
         document.getElementById("output").textContent = `
           Status: ${status}
@@ -142,11 +148,10 @@
     // Create Wallet Functionality
     document.getElementById("create-wallet").addEventListener("click", async () => {
       const wallet = xrpl.Wallet.generate();
+      currentWallet = wallet; // Store the current wallet
       await displayWalletDetails(wallet, "Created");
 
       alert(`New wallet created!\n\nWallet Address: ${wallet.address}\nWallet Secret: ${wallet.seed}\n\nIMPORTANT: Save your wallet secret securely.`);
-
-      // Hide the "Create Wallet" button after creation
       document.getElementById("create-wallet").style.display = "none";
     });
 
@@ -160,11 +165,62 @@
 
       try {
         const wallet = xrpl.Wallet.fromSeed(secret);
+        currentWallet = wallet; // Store the current wallet
         await displayWalletDetails(wallet, "Imported");
 
         alert(`Wallet imported successfully!\n\nWallet Address: ${wallet.address}`);
       } catch (error) {
         alert("Invalid wallet secret. Please try again.");
+      }
+    });
+
+    // Send XRP Functionality
+    document.getElementById("send-xrp").addEventListener("click", async () => {
+      if (!currentWallet) {
+        alert("No wallet connected. Create or import a wallet first.");
+        return;
+      }
+
+      const destination = prompt("Enter the recipient's wallet address:");
+      if (!destination) {
+        alert("No destination address provided.");
+        return;
+      }
+
+      const amount = prompt("Enter the amount of XRP to send:");
+      if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert("Invalid amount provided.");
+        return;
+      }
+
+      try {
+        await connectClient();
+
+        // Prepare the payment transaction
+        const payment = {
+          TransactionType: "Payment",
+          Account: currentWallet.address,
+          Destination: destination,
+          Amount: xrpl.xrpToDrops(amount), // Convert amount to drops
+        };
+
+        // Autofill transaction details (e.g., fee, sequence number)
+        const prepared = await client.autofill(payment);
+        const signed = currentWallet.sign(prepared);
+
+        // Submit the transaction
+        const result = await client.submitAndWait(signed.tx_blob);
+
+        if (result.result.meta.TransactionResult === "tesSUCCESS") {
+          alert(`Transaction successful!\n\nTransaction Hash: ${signed.hash}`);
+        } else {
+          alert(`Transaction failed: ${result.result.meta.TransactionResult}`);
+        }
+
+        // Refresh wallet details
+        await displayWalletDetails(currentWallet, "Updated");
+      } catch (error) {
+        alert(`Error sending XRP: ${error.message}`);
       }
     });
   </script>
