@@ -11,13 +11,11 @@
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
 <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300&display=swap" rel="stylesheet">
-<script
-  src="https://code.jquery.com/jquery-3.5.1.js"
-  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-  crossorigin="anonymous"></script>
+
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <script src="https://unpkg.com/xrpl/build/xrpl-latest-min.js"></script>
+ <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -86,6 +84,12 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- Download Excel Button -->
+  <button class="excel-button" id="download-excel">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/ms-excel.png" alt="Excel Icon">
+    Download Excel
+  </button>
 
   <!-- Pagination Controls -->
   <div class="pagination" id="pagination-controls"></div>
@@ -189,27 +193,26 @@
       }
     }
 
+    function downloadExcel() {
+      const sheetData = allTransactions.map((tx) => ({
+        Hash: tx.hash,
+        Type: tx.type,
+        Amount: tx.amount,
+        Fee: tx.fee,
+        Date: tx.date,
+        "Explorer Link": tx.link,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(sheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+      XLSX.writeFile(workbook, "xrp_transactions.xlsx");
+    }
+
     document.getElementById("view-transactions").addEventListener("click", fetchTransactions);
+    document.getElementById("download-excel").addEventListener("click", downloadExcel);
   </script>
 
-    <script type="text/javascript">
-      //whoosh 2020
-
- $(document).ready(function() {
-     var d = new Date();
-      document.getElementById("location").innerHTML = d;
-
-   $("#day-theme").click(function(){
-      $('body').addClass('daytheme')
-    });
    
-   $("#night-theme").click(function(){
-      $('body').removeClass('daytheme')
-    });
-   
- });
-
-    </script>
-</body>
 
 </html>

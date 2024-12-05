@@ -146,6 +146,75 @@ border-radius: 31px;
     font-size: 10px!important;
     display: inline-block;
 }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .pagination button {
+      margin: 0 5px;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      background-color: #f4f4f4;
+      cursor: pointer;
+    }
+    .pagination button.active {
+      background-color: #007BFF;
+      color: white;
+    }
+
+    /* Responsive Table Styling */
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      min-width: 600px;
+    }
+    @media (max-width: 600px) {
+      table {
+        font-size: 12px;
+      }
+      th, td {
+        padding: 8px;
+      }
+    }
+
+    /* Excel Button */
+    .excel-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .excel-button:hover {
+      background-color: #218838;
+    }
+    .excel-button img {
+      margin-right: 8px;
+      width: 20px;
+      height: 20px;
+    }
     input[type="text" ] {
 margin-top: 10px;
  color: white;
