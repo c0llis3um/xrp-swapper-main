@@ -1,0 +1,306 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    XRP Wallet
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+<link href="https://fonts.googleapis.com/css2?family=Exo:wght@300&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-oBWXEjHENn0ub2T9P9O2U4zVDl5uJ93gQz1AiIQ43bSTBjQ0uHHErUJVoF0QsmQI"
+    crossorigin="anonymous"
+  >
+
+
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<script src="https://unpkg.com/xrpl/build/xrpl-latest-min.js"></script>
+</head>
+
+<body>
+
+
+<div id="wallet-details" class="content-inputs bk1 col">
+  <small>Wallet Balance</small>
+   <div><h1><span id="xrp-balance">N/A</span></h1>
+    <strong>XRP Balance</strong> </div>
+  <div><strong>Status:</strong> <span id="status">N/A</span></div>
+  <div><strong>Wallet Address:</strong> <span id="wallet-address">N/A</span></div>
+  <div><strong>Wallet Secret:</strong> <span id="wallet-secret">Hidden</span> <button id="toggle-secret">Show Secret</button></div>
+   <nav class="xrpnav">
+   <button id="create-wallet" class="">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M26 10h-1v-.84a4.46 4.46 0 0 0-4-4.24V4a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v.92a4.8 4.8 0 0 0-2.69 1.27A4.06 4.06 0 0 0 2 9a.36.36 0 0 0 0 .11v17.05A2.89 2.89 0 0 0 4.94 29h17.12A2.89 2.89 0 0 0 25 26.16V24h.75A4.13 4.13 0 0 0 30 20v-6.23A3.89 3.89 0 0 0 26 10zm0 2a1.9 1.9 0 0 1 2 1.77v.76a6.64 6.64 0 0 1-3 1.36v-1.5a1.9 1.9 0 0 0 0-.25.7.7 0 0 0 0-.14v-2zm-3 10h-2.67a2.14 2.14 0 0 1-2.25-2 2.14 2.14 0 0 1 2.25-2H23zm0-12.84v1.67a5 5 0 0 0-2-.76V7a2.42 2.42 0 0 1 2 2.16zM19 5v5H8V5zM6 7v2.66a6.44 6.44 0 0 1-1.93-1 2.27 2.27 0 0 1 .62-1A2.89 2.89 0 0 1 6 7zm17 19.16a.89.89 0 0 1-.94.84H4.94a.89.89 0 0 1-.94-.84V11a8.68 8.68 0 0 0 4.07 1h12.16A2.6 2.6 0 0 1 23 14.39V16h-2.67a4.13 4.13 0 0 0-4.25 4 4.13 4.13 0 0 0 4.25 4H23zM28 20a2.14 2.14 0 0 1-2.25 2H25v-4.09a8.67 8.67 0 0 0 3-1z" style="fill:#231f20"/></svg>
+   Create Wallet</button>
+   <button id="import-wallet" class="">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 73.82C155.387 73.82 73.821 155.392 73.821 256S155.387 438.18 256 438.18c100.61 0 182.18-81.571 182.18-182.18S356.609 73.82 256 73.82zm-47.404 127.96a12.896 12.896 0 0 1 18.242 0l16.15 16.146v-68.22a12.9 12.9 0 1 1 25.8 0v69.098l5.621-5.625 11.4-11.399a12.886 12.886 0 0 1 21.8 11.4v.008c-.052.29-.145.572-.22.853a12.844 12.844 0 0 1-.387 1.318c-.105.282-.228.572-.36.861a12.461 12.461 0 0 1-.695 1.31c-.13.22-.254.448-.408.66a12.45 12.45 0 0 1-1.49 1.828l-18.36 18.36-20.144 20.153a12.877 12.877 0 0 1-9.123 3.762h-.185a12.869 12.869 0 0 1-9.123-3.762l-20.148-20.153-18.361-18.36a11.824 11.824 0 0 1-1.48-1.82c-.16-.22-.283-.448-.423-.676a14.28 14.28 0 0 1-.686-1.302c-.131-.29-.254-.58-.36-.878a12.089 12.089 0 0 1-.382-1.274c-.075-.3-.176-.59-.225-.889a12.822 12.822 0 0 1 3.547-11.399zm146.478 126.264c0 17.411-17.072 31.051-38.874 31.051H195.804c-21.797 0-38.875-13.64-38.875-31.051V244.24c0-14.721 12.217-26.71 29.159-30.085a31.546 31.546 0 0 0 9.149 19.24l4.988 4.992h-4.421c-8.825 0-13.672 4.394-13.672 5.853v83.803c0 1.451 4.847 5.854 13.672 5.854h120.401c8.825 0 13.675-4.403 13.675-5.853V244.24c0-1.459-4.85-5.854-13.675-5.854h-3.788l4.992-4.992a31.538 31.538 0 0 0 9.127-19.107c16.616 3.542 28.543 15.416 28.543 29.953v83.803z" data-name="File Import"/></svg>
+   Import Wallet</button>
+   <button id="send-xrp" class="" disabled>
+
+<svg version="1.1" id="icons_1_" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 128 128" style="enable-background:new 0 0 128 128" xml:space="preserve"><style>.st0{display:none}.st1{display:inline}.st2{fill:#0a0a0a}</style><g id="row2_1_"><g id="_x34__3_"><path class="st2" d="M64 .3C28.7.3 0 28.8 0 64s28.7 63.7 64 63.7 64-28.5 64-63.7S99.3.3 64 .3zm0 121C32.2 121.3 6.4 95.7 6.4 64 6.4 32.3 32.2 6.7 64 6.7s57.6 25.7 57.6 57.3c0 31.7-25.8 57.3-57.6 57.3zM38.4 58.9V66c0 2.2 1.8 3.9 3.9 3.9l15.3-12.2v28.7c0 2.2 2.3 3.2 4.4 3.2h4c2.2 0 3.9-1.8 3.9-3.9V57.2l15.8 12.7c2.2 0 3.9-1.8 3.9-3.9v-7.1L64 32.2 38.4 58.9z" id="up"/></g></g></svg>
+   Send <br>XRP</button>
+
+  </nav>
+
+</div>
+
+     <section class="eth-logo">
+        
+                  <div class="ripple-background" style="z-index: -1000;position: fixed;top:10%;left: 50%;">
+                    <div class="circle xxlarge shade1"></div>
+                    <div class="circle xlarge shade2"></div>
+                    <div class="circle large shade3"></div>
+                    <div class="circle mediun shade4"></div>
+                    <div class="circle small shade5"></div>
+                </div>
+     </section> 
+
+
+<div class="content-inputs col">
+
+ <h3>Latest XRP Transactions</h3>
+  <table id="transactions-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Destination</th>
+        <th>Transaction Hash</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="4">No transactions available.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<footer>
+     <img class="logo" src="logo.svg" width="100" /> 2024
+
+       <div class="theme-sel">
+          <section class="day">
+
+            <a href="#" id="day-theme">
+              <svg id="Capa_1" fill="#FFFFFF" enable-background="new 0 0 512 512"viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><g><path d="m256 360.099c-57.4 0-104.099-46.698-104.099-104.099s46.699-104.099 104.099-104.099 104.099 46.699 104.099 104.099-46.699 104.099-104.099 104.099z"/></g><g><path d="m256 116.071c-8.284 0-15-6.716-15-15v-86.071c0-8.284 6.716-15 15-15s15 6.716 15 15v86.071c0 8.284-6.716 15-15 15z"/></g><g><path d="m146.449 161.449c-3.839 0-7.678-1.464-10.606-4.393l-60.863-60.862c-5.858-5.858-5.858-15.355 0-21.213 5.857-5.858 15.355-5.858 21.213 0l60.862 60.861c5.858 5.858 5.858 15.355 0 21.213-2.928 2.929-6.767 4.394-10.606 4.394z"/></g><g><path d="m101.071 271h-86.071c-8.284 0-15-6.716-15-15s6.716-15 15-15h86.071c8.284 0 15 6.716 15 15s-6.716 15-15 15z"/></g><g><path d="m85.587 441.413c-3.839 0-7.678-1.464-10.606-4.394-5.858-5.858-5.858-15.355 0-21.213l60.862-60.861c5.858-5.857 15.356-5.857 21.213 0 5.858 5.858 5.858 15.355 0 21.213l-60.863 60.862c-2.928 2.928-6.767 4.393-10.606 4.393z"/></g><g><path d="m256 512c-8.284 0-15-6.716-15-15v-86.071c0-8.284 6.716-15 15-15s15 6.716 15 15v86.071c0 8.284-6.716 15-15 15z"/></g><g><path d="m426.413 441.413c-3.839 0-7.678-1.464-10.606-4.393l-60.862-60.861c-5.858-5.858-5.858-15.355 0-21.213 5.857-5.858 15.355-5.858 21.213 0l60.862 60.861c5.858 5.858 5.858 15.355 0 21.213-2.929 2.928-6.768 4.393-10.607 4.393z"/></g><g><path d="m497 271h-86.071c-8.284 0-15-6.716-15-15s6.716-15 15-15h86.071c8.284 0 15 6.716 15 15s-6.716 15-15 15z"/></g><g><path d="m365.551 161.449c-3.839 0-7.678-1.464-10.606-4.394-5.858-5.858-5.858-15.355 0-21.213l60.862-60.861c5.857-5.856 15.355-5.858 21.213 0s5.858 15.355 0 21.213l-60.862 60.861c-2.929 2.929-6.769 4.394-10.607 4.394z"/></g></g></svg>
+            </a>
+          </section>
+          <section class="night">
+            <a href="#" id="night-theme">
+              <svg  fill="#FFFFFF" viewBox="-12 0 448 448.04455"  xmlns="http://www.w3.org/2000/svg"><path d="m224.023438 448.03125c85.714843.902344 164.011718-48.488281 200.117187-126.230469-22.722656 9.914063-47.332031 14.769531-72.117187 14.230469-97.15625-.109375-175.890626-78.84375-176-176 .972656-65.71875 37.234374-125.832031 94.910156-157.351562-15.554688-1.980469-31.230469-2.867188-46.910156-2.648438-123.714844 0-224.0000005 100.289062-224.0000005 224 0 123.714844 100.2851565 224 224.0000005 224zm0 0"/></svg>
+
+
+            </a>
+          </section>
+        </div>  
+</footer>
+  <script>
+    const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233"); // Testnet client
+    let currentWallet = null; // Store the currently active wallet
+
+    async function connectClient() {
+      if (!client.isConnected()) {
+        await client.connect();
+      }
+    }
+
+async function displayWalletDetails(wallet, status) {
+  await connectClient();
+
+  // Update the status field
+  document.getElementById("status").textContent = status;
+
+  try {
+    // Fetch account info
+    const accountInfo = await client.request({
+      command: "account_info",
+      account: wallet.address,
+      ledger_index: "validated",
+    });
+
+    const balance = accountInfo.result.account_data.Balance;
+
+    // Update the wallet details fields
+    document.getElementById("wallet-address").textContent = wallet.address;
+    document.getElementById("wallet-secret").textContent = "Hidden"; // Default state
+    document.getElementById("xrp-balance").textContent = `${xrpl.dropsToXrp(balance)} XRP`;
+
+    // Enable the send XRP button
+    document.getElementById("send-xrp").disabled = false;
+
+    await fetchTransactions(wallet.address);
+  } catch (error) {
+    // Handle errors in fetching wallet details
+    document.getElementById("wallet-address").textContent = wallet.address;
+    document.getElementById("xrp-balance").textContent = "Unable to fetch balance (Wallet may not be funded).";
+  }
+}
+
+
+    async function fetchTransactions(address) {
+      const tableBody = document.querySelector("#transactions-table tbody");
+      tableBody.innerHTML = "<tr><td colspan='4'>Loading transactions...</td></tr>";
+
+      try {
+        const transactions = await client.request({
+          command: "account_tx",
+          account: address,
+          ledger_index_min: -1,
+          ledger_index_max: -1,
+          limit: 10,
+        });
+
+        if (transactions.result.transactions.length > 0) {
+          tableBody.innerHTML = ""; // Clear the table
+          transactions.result.transactions.forEach((tx) => {
+            const txn = tx.tx;
+            const type = txn.TransactionType || "Unknown";
+            const amount = txn.Amount ? xrpl.dropsToXrp(txn.Amount) + " XRP" : "N/A";
+            const destination = txn.Destination || "N/A";
+            const hash = txn.hash || "N/A";
+
+            const explorerUrl = `https://testnet.xrpl.org/transactions/${hash}`;
+
+            const row = `
+              <tr>
+                <td>${type}</td>
+                <td>${amount}</td>
+                <td>${destination}</td>
+                <td><a href="${explorerUrl}" target="_blank">${hash}</a></td>
+              </tr>
+            `;
+            tableBody.innerHTML += row;
+          });
+        } else {
+          tableBody.innerHTML = "<tr><td colspan='4'>No transactions found.</td></tr>";
+        }
+      } catch (error) {
+        tableBody.innerHTML = `<tr><td colspan='4'>Error fetching transactions: ${error.message}</td></tr>`;
+      }
+    }
+
+    document.getElementById("create-wallet").addEventListener("click", async () => {
+      const wallet = xrpl.Wallet.generate();
+      currentWallet = wallet;
+      await displayWalletDetails(wallet, "Created");
+
+      alert(`New wallet created!\n\nWallet Address: ${wallet.address}\nWallet Secret: ${wallet.seed}\n\nIMPORTANT: Save your wallet secret securely.`);
+      document.getElementById("create-wallet").style.display = "none";
+    });
+
+    document.getElementById("import-wallet").addEventListener("click", async () => {
+      const secret = prompt("Enter your wallet secret:");
+      if (!secret) {
+        alert("No secret provided.");
+        return;
+      }
+
+      try {
+        const wallet = xrpl.Wallet.fromSeed(secret);
+        currentWallet = wallet;
+        await displayWalletDetails(wallet, "Imported");
+
+        alert(`Wallet imported successfully!\n\nWallet Address: ${wallet.address}`);
+      } catch (error) {
+        alert("Invalid wallet secret. Please try again.");
+      }
+    });
+
+    document.getElementById("send-xrp").addEventListener("click", async () => {
+      if (!currentWallet) {
+        alert("No wallet connected. Create or import a wallet first.");
+        return;
+      }
+
+      const destination = prompt("Enter the recipient's wallet address:");
+      if (!destination) {
+        alert("No destination address provided.");
+        return;
+      }
+
+      const amount = prompt("Enter the amount of XRP to send:");
+      if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+        alert("Invalid amount provided.");
+        return;
+      }
+
+      try {
+        await connectClient();
+
+        const payment = {
+          TransactionType: "Payment",
+          Account: currentWallet.address,
+          Destination: destination,
+          Amount: xrpl.xrpToDrops(amount),
+        };
+
+        const prepared = await client.autofill(payment);
+        const signed = currentWallet.sign(prepared);
+
+        const result = await client.submitAndWait(signed.tx_blob);
+
+        if (result.result.meta.TransactionResult === "tesSUCCESS") {
+          alert(`Transaction successful!\n\nTransaction Hash: ${signed.hash}`);
+        } else {
+          alert(`Transaction failed: ${result.result.meta.TransactionResult}`);
+        }
+
+        await displayWalletDetails(currentWallet, "Updated");
+      } catch (error) {
+        alert(`Error sending XRP: ${error.message}`);
+      }
+    });
+
+    document.getElementById("toggle-secret").addEventListener("click", () => {
+  const secretElement = document.getElementById("wallet-secret");
+  const toggleButton = document.getElementById("toggle-secret");
+
+  if (secretElement.textContent === "Hidden") {
+    secretElement.textContent = currentWallet ? currentWallet.seed : "N/A";
+    toggleButton.textContent = "Hide Secret";
+  } else {
+    secretElement.textContent = "Hidden";
+    toggleButton.textContent = "Show Secret";
+  }
+});
+
+  </script>
+
+
+
+    <script type="text/javascript">
+      //whoosh 2020
+
+ $(document).ready(function() {
+     var d = new Date();
+      document.getElementById("location").innerHTML = d;
+
+   $("#day-theme").click(function(){
+      $('body').addClass('daytheme')
+    });
+   
+   $("#night-theme").click(function(){
+      $('body').removeClass('daytheme')
+    });
+   
+ });
+
+    </script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p3PlUz3E+z22YNH1Y5CDo32i6SU8KoWQcFzfnQJt1lZy1e3Lsx2sZo6aCzXQnxj8"
+    crossorigin="anonymous"
+  ></script>
+</body>
+
+</html>

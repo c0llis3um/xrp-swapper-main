@@ -3,14 +3,20 @@
 background: #0b171b;
 font-family: 'Exo', sans-serif;
   }
-
+.bk1{
+  background: #83c9ffa1!important;
+}
+#wallet-details{
+  text-align: left;
+  padding: 8%;
+}
 
   h1{
     font-family: 'Exo', sans-serif;
     font-weight: bold;
   }
   table{
-    font-size: 11px;
+    font-size: 10px;
     width: 100%;
   }
 .logo{
@@ -18,7 +24,7 @@ font-family: 'Exo', sans-serif;
 }
   .theme-sel
   {
-    position: absolute;
+
     right: 10px;
     top: 10px;
     display: block;
@@ -141,10 +147,18 @@ border-radius: 31px;
     padding: 6px;
   }
 .xrpnav button{
-    padding: 1%!important;
-    width: 14%!important;
+margin-top: 8%;
+    padding: 1% !important;
+    width: 20% !important;
     font-size: 10px!important;
     display: inline-block;
+    background: none;
+    border: none;
+    color: white;
+}
+.xrpnav svg{
+  filter: invert(1);
+  width: 40px;
 }
     table {
       width: 100%;
