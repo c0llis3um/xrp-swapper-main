@@ -69,7 +69,7 @@
 
   <!-- Transactions Table -->
   <h2>Transactions</h2>
-  <table id="transactions-table">
+   <table id="transactions-table">
     <thead>
       <tr>
         <th>Transaction Hash</th>
@@ -87,12 +87,14 @@
     </tbody>
   </table>
 
- 
-       </div>
-      </section>
+  <!-- Pagination Controls -->
+  <div class="pagination" id="pagination-controls"></div>
 
   <script>
     const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233"); // Testnet client
+    let allTransactions = [];
+    const transactionsPerPage = 5;
+    let currentPage = 1;
 
     async function connectClient() {
       if (!client.isConnected()) {
@@ -121,10 +123,10 @@
           account: walletAddress,
           ledger_index_min: -1,
           ledger_index_max: -1,
-          limit: 10, // Fetch the latest 10 transactions
+          limit: 20, // Fetch the latest 20 transactions for pagination
         });
 
-        const transactions = response.result.transactions.map((tx) => ({
+        allTransactions = response.result.transactions.map((tx) => ({
           hash: tx.tx.hash,
           type: tx.tx.TransactionType,
           amount: tx.tx.Amount ? xrpl.dropsToXrp(tx.tx.Amount) : "-",
@@ -133,22 +135,28 @@
           link: `https://testnet.xrpl.org/transactions/${tx.tx.hash}`,
         }));
 
-        displayTransactions(transactions);
+        currentPage = 1; // Reset to the first page
+        displayTransactions();
+        setupPagination();
       } catch (error) {
         errorMessage.textContent = `Error fetching transactions: ${error.message}`;
       }
     }
 
-    function displayTransactions(transactions) {
+    function displayTransactions() {
+      const start = (currentPage - 1) * transactionsPerPage;
+      const end = start + transactionsPerPage;
+      const transactionsToDisplay = allTransactions.slice(start, end);
+
       const tbody = document.getElementById("transactions-table").querySelector("tbody");
       tbody.innerHTML = "";
 
-      if (transactions.length === 0) {
+      if (transactionsToDisplay.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6">No transactions found for this wallet address.</td></tr>`;
         return;
       }
 
-      transactions.forEach((tx) => {
+      transactionsToDisplay.forEach((tx) => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${tx.hash}</td>
@@ -162,10 +170,27 @@
       });
     }
 
+    function setupPagination() {
+      const paginationControls = document.getElementById("pagination-controls");
+      paginationControls.innerHTML = "";
+
+      const totalPages = Math.ceil(allTransactions.length / transactionsPerPage);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.classList.toggle("active", i === currentPage);
+        button.addEventListener("click", () => {
+          currentPage = i;
+          displayTransactions();
+          setupPagination();
+        });
+        paginationControls.appendChild(button);
+      }
+    }
+
     document.getElementById("view-transactions").addEventListener("click", fetchTransactions);
   </script>
-
-
 
     <script type="text/javascript">
       //whoosh 2020
