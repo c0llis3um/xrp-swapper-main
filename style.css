@@ -205,6 +205,8 @@ margin-top: 8%;
       }
       th, td {
         padding: 8px;
+        white-space-collapse: initial;
+        word-break: break-word;
       }
       tr{
         display: grid;
