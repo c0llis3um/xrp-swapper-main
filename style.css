@@ -140,7 +140,12 @@ border-radius: 31px;
     max-width: 461px;
     padding: 6px;
   }
-
+.xrpnav button{
+    padding: 1%!important;
+    width: 14%!important;
+    font-size: 10px!important;
+    display: inline-block;
+}
     input[type="text" ] {
 margin-top: 10px;
  color: white;
