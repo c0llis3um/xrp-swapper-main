@@ -159,7 +159,7 @@ border-radius: 31px;
       text-align: left;
     }
     th {
-      background-color: #f4f4f4;
+      background-color: ;
     }
     .pagination {
       margin-top: 20px;
@@ -183,14 +183,17 @@ border-radius: 31px;
       -webkit-overflow-scrolling: touch;
     }
     table {
-      min-width: 600px;
+      min-width: 100%;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 900px) {
       table {
         font-size: 12px;
       }
       th, td {
         padding: 8px;
+      }
+      tr{
+        display: grid;
       }
     }
 
