@@ -12,18 +12,27 @@
   <!--     Fonts and icons     -->
 <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-oBWXEjHENn0ub2T9P9O2U4zVDl5uJ93gQz1AiIQ43bSTBjQ0uHHErUJVoF0QsmQI"
-    crossorigin="anonymous"
-  >
-
-
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <script src="https://unpkg.com/xrpl/build/xrpl-latest-min.js"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    const dayThemeBtn = document.getElementById("day-theme");
+    const nightThemeBtn = document.getElementById("night-theme");
+
+    if (dayThemeBtn && nightThemeBtn) {
+        dayThemeBtn.addEventListener("click", function() {
+            document.body.classList.add("daytheme");
+        });
+
+        nightThemeBtn.addEventListener("click", function() {
+            document.body.classList.remove("daytheme");
+        });
+    }
+});
+</script>
 </head>
 
 <body>
@@ -38,7 +47,7 @@
   <div><strong>Wallet Secret:</strong> <span id="wallet-secret">Hidden</span> <button id="toggle-secret">Show Secret</button></div>
    <nav class="xrpnav">
    <button id="create-wallet" class="">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M26 10h-1v-.84a4.46 4.46 0 0 0-4-4.24V4a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1v.92a4.8 4.8 0 0 0-2.69 1.27A4.06 4.06 0 0 0 2 9a.36.36 0 0 0 0 .11v17.05A2.89 2.89 0 0 0 4.94 29h17.12A2.89 2.89 0 0 0 25 26.16V24h.75A4.13 4.13 0 0 0 30 20v-6.23A3.89 3.89 0 0 0 26 10zm0 2a1.9 1.9 0 0 1 2 1.77v.76a6.64 6.64 0 0 1-3 1.36v-1.5a1.9 1.9 0 0 0 0-.25.7.7 0 0 0 0-.14v-2zm-3 10h-2.67a2.14 2.14 0 0 1-2.25-2 2.14 2.14 0 0 1 2.25-2H23zm0-12.84v1.67a5 5 0 0 0-2-.76V7a2.42 2.42 0 0 1 2 2.16zM19 5v5H8V5zM6 7v2.66a6.44 6.44 0 0 1-1.93-1 2.27 2.27 0 0 1 .62-1A2.89 2.89 0 0 1 6 7zm17 19.16a.89.89 0 0 1-.94.84H4.94a.89.89 0 0 1-.94-.84V11a8.68 8.68 0 0 0 4.07 1h12.16A2.6 2.6 0 0 1 23 14.39V16h-2.67a4.13 4.13 0 0 0-4.25 4 4.13 4.13 0 0 0 4.25 4H23zM28 20a2.14 2.14 0 0 1-2.25 2H25v-4.09a8.67 8.67 0 0 0 3-1z" style="fill:#231f20"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L80 128c-8.8 0-16-7.2-16-16s7.2-16 16-16l368 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L64 32zM416 272a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
    Create Wallet</button>
    <button id="import-wallet" class="">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 73.82C155.387 73.82 73.821 155.392 73.821 256S155.387 438.18 256 438.18c100.61 0 182.18-81.571 182.18-182.18S356.609 73.82 256 73.82zm-47.404 127.96a12.896 12.896 0 0 1 18.242 0l16.15 16.146v-68.22a12.9 12.9 0 1 1 25.8 0v69.098l5.621-5.625 11.4-11.399a12.886 12.886 0 0 1 21.8 11.4v.008c-.052.29-.145.572-.22.853a12.844 12.844 0 0 1-.387 1.318c-.105.282-.228.572-.36.861a12.461 12.461 0 0 1-.695 1.31c-.13.22-.254.448-.408.66a12.45 12.45 0 0 1-1.49 1.828l-18.36 18.36-20.144 20.153a12.877 12.877 0 0 1-9.123 3.762h-.185a12.869 12.869 0 0 1-9.123-3.762l-20.148-20.153-18.361-18.36a11.824 11.824 0 0 1-1.48-1.82c-.16-.22-.283-.448-.423-.676a14.28 14.28 0 0 1-.686-1.302c-.131-.29-.254-.58-.36-.878a12.089 12.089 0 0 1-.382-1.274c-.075-.3-.176-.59-.225-.889a12.822 12.822 0 0 1 3.547-11.399zm146.478 126.264c0 17.411-17.072 31.051-38.874 31.051H195.804c-21.797 0-38.875-13.64-38.875-31.051V244.24c0-14.721 12.217-26.71 29.159-30.085a31.546 31.546 0 0 0 9.149 19.24l4.988 4.992h-4.421c-8.825 0-13.672 4.394-13.672 5.853v83.803c0 1.451 4.847 5.854 13.672 5.854h120.401c8.825 0 13.675-4.403 13.675-5.853V244.24c0-1.459-4.85-5.854-13.675-5.854h-3.788l4.992-4.992a31.538 31.538 0 0 0 9.127-19.107c16.616 3.542 28.543 15.416 28.543 29.953v83.803z" data-name="File Import"/></svg>
@@ -46,7 +55,7 @@
    <button id="send-xrp" class="" disabled>
 
 <svg version="1.1" id="icons_1_" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 128 128" style="enable-background:new 0 0 128 128" xml:space="preserve"><style>.st0{display:none}.st1{display:inline}.st2{fill:#0a0a0a}</style><g id="row2_1_"><g id="_x34__3_"><path class="st2" d="M64 .3C28.7.3 0 28.8 0 64s28.7 63.7 64 63.7 64-28.5 64-63.7S99.3.3 64 .3zm0 121C32.2 121.3 6.4 95.7 6.4 64 6.4 32.3 32.2 6.7 64 6.7s57.6 25.7 57.6 57.3c0 31.7-25.8 57.3-57.6 57.3zM38.4 58.9V66c0 2.2 1.8 3.9 3.9 3.9l15.3-12.2v28.7c0 2.2 2.3 3.2 4.4 3.2h4c2.2 0 3.9-1.8 3.9-3.9V57.2l15.8 12.7c2.2 0 3.9-1.8 3.9-3.9v-7.1L64 32.2 38.4 58.9z" id="up"/></g></g></svg>
-   Send <br>XRP</button>
+   Send XRP</button>
 
   </nav>
 
@@ -82,6 +91,16 @@
       </tr>
     </tbody>
   </table>
+
+  <!-- Pagination Controls -->
+  <div class="pagination" id="pagination-controls"></div>
+
+  <!-- Download Excel Button -->
+  <button class="excel-button" id="download-excel">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/ms-excel.png" alt="Excel Icon">
+    Download Excel
+  </button>
+
 
 </div>
 
@@ -274,33 +293,30 @@ async function displayWalletDetails(wallet, status) {
   }
 });
 
+    function setupPagination() {
+      const paginationControls = document.getElementById("pagination-controls");
+      paginationControls.innerHTML = "";
+
+      const totalPages = Math.ceil(allTransactions.length / transactionsPerPage);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.classList.toggle("active", i === currentPage);
+        button.addEventListener("click", () => {
+          currentPage = i;
+          displayTransactions();
+          setupPagination();
+        });
+        paginationControls.appendChild(button);
+      }
+    }
+
+
   </script>
 
 
 
-    <script type="text/javascript">
-      //whoosh 2020
-
- $(document).ready(function() {
-     var d = new Date();
-      document.getElementById("location").innerHTML = d;
-
-   $("#day-theme").click(function(){
-      $('body').addClass('daytheme')
-    });
-   
-   $("#night-theme").click(function(){
-      $('body').removeClass('daytheme')
-    });
-   
- });
-
-    </script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-p3PlUz3E+z22YNH1Y5CDo32i6SU8KoWQcFzfnQJt1lZy1e3Lsx2sZo6aCzXQnxj8"
-    crossorigin="anonymous"
-  ></script>
 </body>
 
 </html>

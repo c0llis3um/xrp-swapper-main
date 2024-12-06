@@ -16,55 +16,62 @@
 
 <script src="https://unpkg.com/xrpl/build/xrpl-latest-min.js"></script>
  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+ <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    const dayThemeBtn = document.getElementById("day-theme");
+    const nightThemeBtn = document.getElementById("night-theme");
+
+    if (dayThemeBtn && nightThemeBtn) {
+        dayThemeBtn.addEventListener("click", function() {
+            document.body.classList.add("daytheme");
+        });
+
+        nightThemeBtn.addEventListener("click", function() {
+            document.body.classList.remove("daytheme");
+        });
+    }
+});
+</script>
 </head>
 
 <body>
 
-  <nav class="xrpnav">
-
-       <div class="theme-sel">
-          <section class="day">
-
-            <a href="#" id="day-theme">
-              <svg id="Capa_1" fill="#FFFFFF" enable-background="new 0 0 512 512"viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><g><path d="m256 360.099c-57.4 0-104.099-46.698-104.099-104.099s46.699-104.099 104.099-104.099 104.099 46.699 104.099 104.099-46.699 104.099-104.099 104.099z"/></g><g><path d="m256 116.071c-8.284 0-15-6.716-15-15v-86.071c0-8.284 6.716-15 15-15s15 6.716 15 15v86.071c0 8.284-6.716 15-15 15z"/></g><g><path d="m146.449 161.449c-3.839 0-7.678-1.464-10.606-4.393l-60.863-60.862c-5.858-5.858-5.858-15.355 0-21.213 5.857-5.858 15.355-5.858 21.213 0l60.862 60.861c5.858 5.858 5.858 15.355 0 21.213-2.928 2.929-6.767 4.394-10.606 4.394z"/></g><g><path d="m101.071 271h-86.071c-8.284 0-15-6.716-15-15s6.716-15 15-15h86.071c8.284 0 15 6.716 15 15s-6.716 15-15 15z"/></g><g><path d="m85.587 441.413c-3.839 0-7.678-1.464-10.606-4.394-5.858-5.858-5.858-15.355 0-21.213l60.862-60.861c5.858-5.857 15.356-5.857 21.213 0 5.858 5.858 5.858 15.355 0 21.213l-60.863 60.862c-2.928 2.928-6.767 4.393-10.606 4.393z"/></g><g><path d="m256 512c-8.284 0-15-6.716-15-15v-86.071c0-8.284 6.716-15 15-15s15 6.716 15 15v86.071c0 8.284-6.716 15-15 15z"/></g><g><path d="m426.413 441.413c-3.839 0-7.678-1.464-10.606-4.393l-60.862-60.861c-5.858-5.858-5.858-15.355 0-21.213 5.857-5.858 15.355-5.858 21.213 0l60.862 60.861c5.858 5.858 5.858 15.355 0 21.213-2.929 2.928-6.768 4.393-10.607 4.393z"/></g><g><path d="m497 271h-86.071c-8.284 0-15-6.716-15-15s6.716-15 15-15h86.071c8.284 0 15 6.716 15 15s-6.716 15-15 15z"/></g><g><path d="m365.551 161.449c-3.839 0-7.678-1.464-10.606-4.394-5.858-5.858-5.858-15.355 0-21.213l60.862-60.861c5.857-5.856 15.355-5.858 21.213 0s5.858 15.355 0 21.213l-60.862 60.861c-2.929 2.929-6.769 4.394-10.607 4.394z"/></g></g></svg>
-            </a>
-          </section>
-          <section class="night">
-            <a href="#" id="night-theme">
-              <svg  fill="#FFFFFF" viewBox="-12 0 448 448.04455"  xmlns="http://www.w3.org/2000/svg"><path d="m224.023438 448.03125c85.714843.902344 164.011718-48.488281 200.117187-126.230469-22.722656 9.914063-47.332031 14.769531-72.117187 14.230469-97.15625-.109375-175.890626-78.84375-176-176 .972656-65.71875 37.234374-125.832031 94.910156-157.351562-15.554688-1.980469-31.230469-2.867188-46.910156-2.648438-123.714844 0-224.0000005 100.289062-224.0000005 224 0 123.714844 100.2851565 224 224.0000005 224zm0 0"/></svg>
-
-
-            </a>
-          </section>
-        </div>  
-  </nav>
 
     <div>
      <section class="eth-logo">
-<img class="logo" src="logo.svg"/>
-      <div class="ripple-background" style="z-index: -1000;position: fixed;top:10%;left: 50%;">
-        <div class="circle xxlarge shade1"></div>
-        <div class="circle xlarge shade2"></div>
-        <div class="circle large shade3"></div>
-        <div class="circle mediun shade4"></div>
-        <div class="circle small shade5"></div>
-    </div>
+        <img class="logo" src="logo.svg"/>
+        <div class="ripple-background" style="z-index: -1000;position: fixed;top:10%;left: 50%;">
+          <div class="circle xxlarge shade1"></div>
+          <div class="circle xlarge shade2"></div>
+          <div class="circle large shade3"></div>
+          <div class="circle mediun shade4"></div>
+          <div class="circle small shade5"></div>
+      </div>
      </section> 
 
-
-      <section>
         <div class="content-inputs">
 
           <h1>XRP Wallet Transactions Viewer</h1>
 
-  <!-- Form to input XRP wallet address -->
-  <div class="form-group">
-    <label for="wallet-address">Enter XRP Wallet Address:</label>
-    <input type="text" id="wallet-address" placeholder="Enter XRP wallet address">
-  </div>
-  <button id="view-transactions" class="btn submit">View Transactions</button>
-  <p class="error" id="error-message"></p>
+              <!-- Form to input XRP wallet address -->
+              <div class="form-group">
+                <label for="wallet-address">Enter XRP Wallet Address:</label>
+                <input type="text" id="wallet-address" placeholder="Enter XRP wallet address">
+              </div>
 
+              <button id="view-transactions" class="btn submit">View Transactions</button>
+              <p class="error" id="error-message"></p>
+
+<div class="trans dnone" id="transactions">
+
+
+              <div id="transaction-summary">
+                <div id="total-transactions" class="cl5">Total Transactions: 0</div>
+                <div id="total-xrp" class="cl5">Total XRP Amount: 0.00 XRP</div>
+                <div id="total-tokens" class="cl5">Tokens: 0.00</div>
+
+              </div>
   <!-- Transactions Table -->
   <h2>Transactions</h2>
    <table id="transactions-table">
@@ -85,14 +92,49 @@
     </tbody>
   </table>
 
-  <!-- Download Excel Button -->
-  <button class="excel-button" id="download-excel">
+<!-- Trigger Button -->
+<button id="open-modal-btn">Open Modal</button>
+
+<!-- Modal Structure -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="close-modal-btn" class="close">&times;</span>
+    <h2>Modal Title</h2>
+    <p>This is a simple modal. You can add any content here.</p>
+    <button id="confirm-action">Confirm Action</button>
+
+      <!-- Download Excel Button -->
+  <button class="excel-button dnone" id="download-excel">
     <img src="https://img.icons8.com/ios-filled/50/ffffff/ms-excel.png" alt="Excel Icon">
     Download Excel
   </button>
+  </div>
+</div>
+
 
   <!-- Pagination Controls -->
   <div class="pagination" id="pagination-controls"></div>
+</div>
+
+
+ <div class="theme-sel">
+          <section class="day">
+
+            <a href="#" id="day-theme">
+              <svg id="Capa_1" fill="#FFFFFF" enable-background="new 0 0 512 512"viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><g><path d="m256 360.099c-57.4 0-104.099-46.698-104.099-104.099s46.699-104.099 104.099-104.099 104.099 46.699 104.099 104.099-46.699 104.099-104.099 104.099z"/></g><g><path d="m256 116.071c-8.284 0-15-6.716-15-15v-86.071c0-8.284 6.716-15 15-15s15 6.716 15 15v86.071c0 8.284-6.716 15-15 15z"/></g><g><path d="m146.449 161.449c-3.839 0-7.678-1.464-10.606-4.393l-60.863-60.862c-5.858-5.858-5.858-15.355 0-21.213 5.857-5.858 15.355-5.858 21.213 0l60.862 60.861c5.858 5.858 5.858 15.355 0 21.213-2.928 2.929-6.767 4.394-10.606 4.394z"/></g><g><path d="m101.071 271h-86.071c-8.284 0-15-6.716-15-15s6.716-15 15-15h86.071c8.284 0 15 6.716 15 15s-6.716 15-15 15z"/></g><g><path d="m85.587 441.413c-3.839 0-7.678-1.464-10.606-4.394-5.858-5.858-5.858-15.355 0-21.213l60.862-60.861c5.858-5.857 15.356-5.857 21.213 0 5.858 5.858 5.858 15.355 0 21.213l-60.863 60.862c-2.928 2.928-6.767 4.393-10.606 4.393z"/></g><g><path d="m256 512c-8.284 0-15-6.716-15-15v-86.071c0-8.284 6.716-15 15-15s15 6.716 15 15v86.071c0 8.284-6.716 15-15 15z"/></g><g><path d="m426.413 441.413c-3.839 0-7.678-1.464-10.606-4.393l-60.862-60.861c-5.858-5.858-5.858-15.355 0-21.213 5.857-5.858 15.355-5.858 21.213 0l60.862 60.861c5.858 5.858 5.858 15.355 0 21.213-2.929 2.928-6.768 4.393-10.607 4.393z"/></g><g><path d="m497 271h-86.071c-8.284 0-15-6.716-15-15s6.716-15 15-15h86.071c8.284 0 15 6.716 15 15s-6.716 15-15 15z"/></g><g><path d="m365.551 161.449c-3.839 0-7.678-1.464-10.606-4.394-5.858-5.858-5.858-15.355 0-21.213l60.862-60.861c5.857-5.856 15.355-5.858 21.213 0s5.858 15.355 0 21.213l-60.862 60.861c-2.929 2.929-6.769 4.394-10.607 4.394z"/></g></g></svg>
+            </a>
+          </section>
+          <section class="night">
+            <a href="#" id="night-theme">
+              <svg  fill="#FFFFFF" viewBox="-12 0 448 448.04455"  xmlns="http://www.w3.org/2000/svg"><path d="m224.023438 448.03125c85.714843.902344 164.011718-48.488281 200.117187-126.230469-22.722656 9.914063-47.332031 14.769531-72.117187 14.230469-97.15625-.109375-175.890626-78.84375-176-176 .972656-65.71875 37.234374-125.832031 94.910156-157.351562-15.554688-1.980469-31.230469-2.867188-46.910156-2.648438-123.714844 0-224.0000005 100.289062-224.0000005 224 0 123.714844 100.2851565 224 224.0000005 224zm0 0"/></svg>
+
+
+            </a>
+          </section>
+        </div>  
+
+
+
 
   <script>
     const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233"); // Testnet client
@@ -106,46 +148,80 @@
       }
     }
 
-    async function fetchTransactions() {
-      const walletAddress = document.getElementById("wallet-address").value.trim();
-      const errorMessage = document.getElementById("error-message");
+async function fetchTransactions() {
+  const walletAddress = document.getElementById("wallet-address").value.trim();
+  const errorMessage = document.getElementById("error-message");
 
-      // Clear error message
-      errorMessage.textContent = "";
+  // Clear error message
+  errorMessage.textContent = "";
 
-      if (!walletAddress) {
-        errorMessage.textContent = "Please enter a valid XRP wallet address.";
-        return;
+  if (!walletAddress) {
+    errorMessage.textContent = "Please enter a valid XRP wallet address.";
+    return;
+  }
+
+  try {
+    await connectClient();
+
+    // Fetch transactions
+    const response = await client.request({
+      command: "account_tx",
+      account: walletAddress,
+      ledger_index_min: -1,
+      ledger_index_max: -1,
+      limit: 20, // Fetch the latest 20 transactions for pagination
+    });
+
+    allTransactions = response.result.transactions.map((tx) => {
+      const amount = tx.tx.Amount;
+      let tokenDetails = null;
+
+      // Check if the transaction involves issued tokens
+      if (typeof amount === "object" && amount.currency && amount.issuer) {
+        tokenDetails = {
+          currency: amount.currency,
+          issuer: amount.issuer,
+          value: parseFloat(amount.value),
+        };
       }
 
-      try {
-        await connectClient();
+      return {
+        hash: tx.tx.hash,
+        type: tx.tx.TransactionType,
+        amount: typeof amount === "string" ? xrpl.dropsToXrp(amount) : "-", // XRP transactions
+        fee: xrpl.dropsToXrp(tx.tx.Fee),
+        date: new Date(tx.tx.date * 1000).toLocaleString(),
+        link: `https://testnet.xrpl.org/transactions/${tx.tx.hash}`,
+        tokenDetails: tokenDetails, // Include token details if available
+      };
+    });
 
-        // Fetch transactions
-        const response = await client.request({
-          command: "account_tx",
-          account: walletAddress,
-          ledger_index_min: -1,
-          ledger_index_max: -1,
-          limit: 20, // Fetch the latest 20 transactions for pagination
-        });
+    // Update total transactions
+    const totalTransactions = allTransactions.length;
 
-        allTransactions = response.result.transactions.map((tx) => ({
-          hash: tx.tx.hash,
-          type: tx.tx.TransactionType,
-          amount: tx.tx.Amount ? xrpl.dropsToXrp(tx.tx.Amount) : "-",
-          fee: xrpl.dropsToXrp(tx.tx.Fee),
-          date: new Date(tx.tx.date * 1000).toLocaleString(),
-          link: `https://testnet.xrpl.org/transactions/${tx.tx.hash}`,
-        }));
+    // Update total XRP amount
+    const totalXrp = allTransactions
+      .filter((tx) => tx.amount !== "-")
+      .reduce((sum, tx) => sum + parseFloat(tx.amount), 0);
 
-        currentPage = 1; // Reset to the first page
-        displayTransactions();
-        setupPagination();
-      } catch (error) {
-        errorMessage.textContent = `Error fetching transactions: ${error.message}`;
-      }
-    }
+    // Count tokens
+    const totalTokens = allTransactions
+      .filter((tx) => tx.tokenDetails)
+      .reduce((sum, tx) => sum + tx.tokenDetails.value, 0);
+
+    // Update the DOM with totals
+    document.getElementById("total-transactions").textContent = `Total Transactions: ${totalTransactions}`;
+    document.getElementById("total-xrp").textContent = `Total XRP Amount: ${totalXrp.toFixed(2)} XRP`;
+    document.getElementById("total-tokens").textContent = `Total Tokens: ${totalTokens.toFixed(2)}`;
+
+    currentPage = 1; // Reset to the first page
+    displayTransactions();
+    setupPagination();
+  } catch (error) {
+    errorMessage.textContent = `Error fetching transactions: ${error.message}`;
+  }
+}
+
 
     function displayTransactions() {
       const start = (currentPage - 1) * transactionsPerPage;
@@ -193,6 +269,8 @@
       }
     }
 
+
+
     function downloadExcel() {
       const sheetData = allTransactions.map((tx) => ({
         Hash: tx.hash,
@@ -211,6 +289,55 @@
 
     document.getElementById("view-transactions").addEventListener("click", fetchTransactions);
     document.getElementById("download-excel").addEventListener("click", downloadExcel);
+
+
+// Get the modal and button elements
+const modal = document.getElementById("modal");
+const openModalBtn = document.getElementById("open-modal-btn");
+const closeModalBtn = document.getElementById("close-modal-btn");
+const confirmActionBtn = document.getElementById("confirm-action");
+
+// Function to open the modal
+function openModal() {
+  modal.style.display = "block";
+}
+
+// Function to close the modal
+function closeModal() {
+  modal.style.display = "none";
+}
+
+// When the user clicks on the button, open the modal
+openModalBtn.addEventListener("click", openModal);
+
+// When the user clicks on the close button (X), close the modal
+closeModalBtn.addEventListener("click", closeModal);
+
+// When the user clicks anywhere outside of the modal, close the modal
+window.addEventListener("click", function(event) {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+
+// Example of what can happen when the "Confirm Action" button is clicked
+confirmActionBtn.addEventListener("click", function() {
+  alert("Action Confirmed!");
+  closeModal(); // Close the modal after confirming the action
+});
+
+
+// Get the button and the element to show/hide
+const viewTransactionsBtn = document.getElementById("view-transactions");
+const transactionsElement = document.getElementById("transactions");
+
+// Add event listener to the button
+viewTransactionsBtn.addEventListener("click", function() {
+  // Remove the "dnone" class to make the element visible
+  transactionsElement.classList.remove("dnone");
+});
+
+
   </script>
 
    

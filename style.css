@@ -10,6 +10,29 @@ font-family: 'Exo', sans-serif;
   text-align: left;
   padding: 8%;
 }
+.dnone{
+  display: none!important;
+}
+
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: black;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
 
   h1{
     font-family: 'Exo', sans-serif;
@@ -17,6 +40,7 @@ font-family: 'Exo', sans-serif;
   }
   table{
     font-size: 10px;
+    border: none;
     width: 100%;
   }
 .logo{
@@ -143,7 +167,19 @@ border-radius: 31px;
     display: block;
     text-align: center;
     background: #0e202ea1;
-    max-width: 461px;
+    max-width: 80%;
+    padding: 6px;
+  }
+  #transaction-summary{
+    display: flex;
+  }
+  .cl5{
+    display: inline-block;
+    width: 49.9%;
+    margin: 7px;
+    border-radius: 31px;
+    text-align: center;
+    background: #0e202ea1;
     padding: 6px;
   }
 .xrpnav button{
@@ -159,6 +195,8 @@ margin-top: 8%;
 .xrpnav svg{
   filter: invert(1);
   width: 40px;
+  display: block;
+    margin: auto;
 }
     table {
       width: 100%;
@@ -166,7 +204,7 @@ margin-top: 8%;
       margin-top: 20px;
     }
     table, th, td {
-      border: 1px solid #ddd;
+      border: 0px solid #ddd;
     }
     th, td {
       padding: 10px;
@@ -175,6 +213,7 @@ margin-top: 8%;
     th {
       background-color: ;
     }
+
     .pagination {
       margin-top: 20px;
       text-align: center;
@@ -294,4 +333,11 @@ body.daytheme {
   input[type="text" ] {
       width: 65%;
   }
+  .content-inputs {
+    border-radius: 31px;
+    margin: auto;
+    display: block;
+    text-align: center;
+    background: #0e202ea1;
+    max-width: 100%;}
 }
