@@ -101,8 +101,8 @@
     <span id="close-modal-btn" class="close">&times;</span>
     <h2>$5 XRP</h2>
     <p>Download your transactions for life!</p>
-    
-    <button id="confirm-action">Confirm Action</button>
+
+    <button id="confirm-action" class="btn">Buy Now</button>
 
       <!-- Download Excel Button -->
   <button class="excel-button dnone" id="download-excel">
@@ -292,41 +292,89 @@ async function fetchTransactions() {
     document.getElementById("download-excel").addEventListener("click", downloadExcel);
 
 
-// Get the modal and button elements
-const modal = document.getElementById("modal");
-const openModalBtn = document.getElementById("open-modal-btn");
-const closeModalBtn = document.getElementById("close-modal-btn");
-const confirmActionBtn = document.getElementById("confirm-action");
+const destinationWallet = "rfefeFsabPP4bJA8bPQs78414w92dSXqwF"; // Replace with the destination wallet address
+  const amountToSend = xrpl.xrpToDrops(5); // 5 XRP in drops (smallest XRP unit)
 
-// Function to open the modal
-function openModal() {
-  modal.style.display = "block";
-}
+  // Function to send 5 XRP
+  async function sendXrp() {
+    const walletSecret = prompt("Enter your wallet's secret key to proceed:");
+    if (!walletSecret) {
+      alert("Transaction canceled: Secret key is required.");
+      return;
+    }
 
-// Function to close the modal
-function closeModal() {
-  modal.style.display = "none";
-}
+    const walletAddress = document.getElementById("wallet-address").value.trim();
+    if (!walletAddress) {
+      alert("Please enter your wallet address in the input field before proceeding.");
+      return;
+    }
 
-// When the user clicks on the button, open the modal
-openModalBtn.addEventListener("click", openModal);
+    try {
+      // Connect to the XRP Ledger client
+      await connectClient();
 
-// When the user clicks on the close button (X), close the modal
-closeModalBtn.addEventListener("click", closeModal);
+      // Create the wallet from the secret key
+      const wallet = xrpl.Wallet.fromSeed(walletSecret);
 
-// When the user clicks anywhere outside of the modal, close the modal
-window.addEventListener("click", function(event) {
-  if (event.target === modal) {
-    closeModal();
+      if (wallet.classicAddress !== walletAddress) {
+        alert("The provided secret key does not match the wallet address.");
+        return;
+      }
+
+      // Prepare payment transaction
+      const payment = {
+        TransactionType: "Payment",
+        Account: walletAddress,
+        Amount: amountToSend,
+        Destination: destinationWallet,
+      };
+
+      // Autofill transaction details
+      const prepared = await client.autofill(payment);
+
+      // Sign the transaction
+      const signed = wallet.sign(prepared);
+
+      // Submit the transaction
+      const result = await client.submitAndWait(signed.tx_blob);
+
+      // Check transaction status
+      if (result.result.meta.TransactionResult === "tesSUCCESS") {
+        alert("Transaction successful! 5 XRP sent.");
+        // Make the "Download Excel" button visible after the transaction
+        document.getElementById("download-excel").classList.remove("dnone");
+      } else {
+        alert(`Transaction failed: ${result.result.meta.TransactionResult}`);
+      }
+    } catch (error) {
+      alert(`Error sending XRP: ${error.message}`);
+    }
   }
-});
 
-// Example of what can happen when the "Confirm Action" button is clicked
-confirmActionBtn.addEventListener("click", function() {
-  alert("Action Confirmed!");
-  closeModal(); // Close the modal after confirming the action
-});
+  // Add event listener to "Confirm Action" button
+  document.getElementById("confirm-action").addEventListener("click", sendXrp);
 
+  // Modal-related code (unchanged)
+  const modal = document.getElementById("modal");
+  const openModalBtn = document.getElementById("open-modal-btn");
+  const closeModalBtn = document.getElementById("close-modal-btn");
+
+  function openModal() {
+    modal.style.display = "block";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  openModalBtn.addEventListener("click", openModal);
+  closeModalBtn.addEventListener("click", closeModal);
+
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
 
 // Get the button and the element to show/hide
 const viewTransactionsBtn = document.getElementById("view-transactions");
@@ -341,6 +389,7 @@ viewTransactionsBtn.addEventListener("click", function() {
 
   </script>
 
-   
+
+
 
 </html>
