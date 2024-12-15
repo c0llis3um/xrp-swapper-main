@@ -6,6 +6,10 @@ font-family: 'Exo', sans-serif;
   tr{
     background: #ffffff0a;
   }
+  small{
+    color: grey;
+    font-size: 9px;
+  }
 .bk1{
   background: #157ecfe8!important;
 }
@@ -342,7 +346,7 @@ body.daytheme {
 }
 .cl5 {
     display: inline-block;
-    width: 94.9%;
+    width:  31.9%;
     margin: 7px;
     border-radius: 31px;
     text-align: center;
