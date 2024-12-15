@@ -12,6 +12,7 @@
   <!--     Fonts and icons     -->
 <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300&display=swap" rel="stylesheet">
 
+
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <script src="https://unpkg.com/xrpl/build/xrpl-latest-min.js"></script>
@@ -66,11 +67,21 @@
 <div class="trans dnone" id="transactions">
 
 <div id="transaction-summary">
-  <div id="total-transactions" class="cl5">Total Transactions: 0</div>
-  <div id="total-xrp" class="cl5">Total XRP Amount: 0.00 XRP</div>
-  <div id="total-sent" class="cl5">Total Sent: 0.00 XRP</div>
-  <div id="total-received" class="cl5">Total Received: 0.00 XRP</div>
-  <div id="total-tokens" class="cl5">Tokens: 0.00</div>
+  <div class="cl5 totalt"><small>Total Transactions</small>
+    <div id="total-transactions" class="">Total Transactions: 0</div>
+  </div>
+  <div class="cl5"><small>Total XRP Amount</small>
+    <div id="total-xrp" >Total XRP Amount: 0.00 XRP</div>
+  </div>
+  <div class="cl5"><small>Sent</small>
+   <div id="total-sent" >Total Sent: 0.00 XRP</div>
+  </div>
+  <div class="cl5"><small>Received</small>  
+    <div id="total-received" >Total Received: 0.00 XRP</div>
+  </div>
+  <div class="cl5"><small>Tokens</small>
+    <div id="total-tokens" >Tokens: 0.00</div>
+   </div> 
 </div>
 
   <!-- Transactions Table -->
