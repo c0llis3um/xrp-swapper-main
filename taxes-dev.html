@@ -65,13 +65,14 @@
 
 <div class="trans dnone" id="transactions">
 
+<div id="transaction-summary">
+  <div id="total-transactions" class="cl5">Total Transactions: 0</div>
+  <div id="total-xrp" class="cl5">Total XRP Amount: 0.00 XRP</div>
+  <div id="total-sent" class="cl5">Total Sent: 0.00 XRP</div>
+  <div id="total-received" class="cl5">Total Received: 0.00 XRP</div>
+  <div id="total-tokens" class="cl5">Tokens: 0.00</div>
+</div>
 
-              <div id="transaction-summary">
-                <div id="total-transactions" class="cl5">Total Transactions: 0</div>
-                <div id="total-xrp" class="cl5">Total XRP Amount: 0.00 XRP</div>
-                <div id="total-tokens" class="cl5">Tokens: 0.00</div>
-
-              </div>
   <!-- Transactions Table -->
   <h2>Transactions</h2>
    <table id="transactions-table">
@@ -194,15 +195,20 @@ async function fetchTransactions() {
         date: new Date(tx.tx.date * 1000).toLocaleString(),
         link: `https://testnet.xrpl.org/transactions/${tx.tx.hash}`,
         tokenDetails: tokenDetails, // Include token details if available
+        isSent: tx.tx.Destination !== walletAddress, // Determine if this is a sent transaction
       };
     });
 
     // Update total transactions
     const totalTransactions = allTransactions.length;
 
-    // Update total XRP amount
-    const totalXrp = allTransactions
-      .filter((tx) => tx.amount !== "-")
+    // Calculate totals for sent and received XRP
+    const totalSent = allTransactions
+      .filter((tx) => tx.isSent && tx.amount !== "-")
+      .reduce((sum, tx) => sum + parseFloat(tx.amount), 0);
+
+    const totalReceived = allTransactions
+      .filter((tx) => !tx.isSent && tx.amount !== "-")
       .reduce((sum, tx) => sum + parseFloat(tx.amount), 0);
 
     // Count tokens
@@ -211,9 +217,11 @@ async function fetchTransactions() {
       .reduce((sum, tx) => sum + tx.tokenDetails.value, 0);
 
     // Update the DOM with totals
-    document.getElementById("total-transactions").textContent = `Total Transactions: ${totalTransactions}`;
-    document.getElementById("total-xrp").textContent = `Total XRP Amount: ${totalXrp.toFixed(2)} XRP`;
-    document.getElementById("total-tokens").textContent = `Total Tokens: ${totalTokens.toFixed(2)}`;
+    document.getElementById("total-transactions").textContent = `${totalTransactions}`;
+    document.getElementById("total-sent").textContent = `${totalSent.toFixed(2)} XRP`;
+    document.getElementById("total-received").textContent = `${totalReceived.toFixed(2)} XRP`;
+    document.getElementById("total-xrp").textContent = `${(totalSent + totalReceived).toFixed(2)} XRP`;
+    document.getElementById("total-tokens").textContent = `${totalTokens.toFixed(2)}`;
 
     currentPage = 1; // Reset to the first page
     displayTransactions();
@@ -222,6 +230,7 @@ async function fetchTransactions() {
     errorMessage.textContent = `Error fetching transactions: ${error.message}`;
   }
 }
+
 
 
     function displayTransactions() {

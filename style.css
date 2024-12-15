@@ -3,6 +3,9 @@
 background: #0b171b;
 font-family: 'Exo', sans-serif;
   }
+  tr{
+    background: #ffffff0a;
+  }
 .bk1{
   background: #157ecfe8!important;
 }
@@ -331,6 +334,21 @@ body.daytheme {
   color: black!important;
 }
 @media only screen and (max-width: 600px) {
+  thead{
+    display: none;
+  }
+  #transaction-summary {
+    display: block;
+}
+.cl5 {
+    display: inline-block;
+    width: 94.9%;
+    margin: 7px;
+    border-radius: 31px;
+    text-align: center;
+    background: #0e202ea1;
+    padding: 14px;
+}
   input[type="text" ] {
       width: 65%;
   }
