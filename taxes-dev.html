@@ -15,7 +15,7 @@
 
 <link rel="stylesheet" type="text/css" href="style.css">
 
-<script src="https://unpkg.com/xrpl/build/xrpl-latest-min.js"></script>
+<script src="https://unpkg.com/xrpl@2.3.0/build/xrpl-latest-min.js"></script>
  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
  <script type="text/javascript">
@@ -184,31 +184,34 @@ async function fetchTransactions() {
       ledger_index_max: -1,
       limit: 20, // Fetch the latest 20 transactions for pagination
     });
+    
+  allTransactions = response.result.transactions.map((tx) => {
+    const amount = tx.tx.Amount;
+    let tokenDetails = null;
 
-    allTransactions = response.result.transactions.map((tx) => {
-      const amount = tx.tx.Amount;
-      let tokenDetails = null;
-
-      // Check if the transaction involves issued tokens
-      if (typeof amount === "object" && amount.currency && amount.issuer) {
-        tokenDetails = {
-          currency: amount.currency,
-          issuer: amount.issuer,
-          value: parseFloat(amount.value),
-        };
-      }
-
-      return {
-        hash: tx.tx.hash,
-        type: tx.tx.TransactionType,
-        amount: typeof amount === "string" ? xrpl.dropsToXrp(amount) : "-", // XRP transactions
-        fee: xrpl.dropsToXrp(tx.tx.Fee),
-        date: new Date(tx.tx.date * 1000).toLocaleString(),
-        link: `https://testnet.xrpl.org/transactions/${tx.tx.hash}`,
-        tokenDetails: tokenDetails, // Include token details if available
-        isSent: tx.tx.Destination !== walletAddress, // Determine if this is a sent transaction
+    // Check if the transaction involves issued tokens
+    if (amount && typeof amount === "object" && amount.currency && amount.issuer) {
+      tokenDetails = {
+        currency: amount.currency,
+        issuer: amount.issuer,
+        value: parseFloat(amount.value),
       };
-    });
+    }
+
+    return {
+      hash: tx.tx.hash,
+      type: tx.tx.TransactionType,
+      amount: amount ? (typeof amount === "string" ? xrpl.dropsToXrp(amount) : "-") : "N/A", // Handle undefined amount
+      fee: xrpl.dropsToXrp(tx.tx.Fee || 0), // Default to 0 if Fee is undefined
+      date: tx.tx.date
+        ? new Date(tx.tx.date * 1000).toLocaleString()
+        : "Unknown Date",
+      link: `https://testnet.xrpl.org/transactions/${tx.tx.hash}`,
+      tokenDetails: tokenDetails, // Include token details if available
+      isSent: tx.tx.Destination !== walletAddress, // Determine if this is a sent transaction
+    };
+  });
+
 
     // Update total transactions
     const totalTransactions = allTransactions.length;

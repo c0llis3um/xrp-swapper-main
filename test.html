@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XRP Wallet Transactions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .transactions {
+      margin-top: 20px;
+    }
+    .transaction {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>XRP Wallet Transactions</h2>
+    <input type="text" id="walletAddress" placeholder="Enter XRP Wallet Address">
+    <button id="fetchTransactions">Fetch Transactions</button>
+    <div class="error" id="error"></div>
+    <div class="transactions" id="transactions"></div>
+  </div>
+
+  <script>
+    async function fetchTransactions(address) {
+      const apiUrl = `https://data.ripple.com/v2/accounts/${address}/transactions`;
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (data.transactions) {
+          return data.transactions;
+        } else {
+          throw new Error('No transactions found.');
+        }
+      } catch (error) {
+        throw new Error(error.message || 'An unknown error occurred.');
+      }
+    }
+
+    document.getElementById('fetchTransactions').addEventListener('click', async () => {
+      const walletAddress = document.getElementById('walletAddress').value.trim();
+      const errorDiv = document.getElementById('error');
+      const transactionsDiv = document.getElementById('transactions');
+
+      errorDiv.textContent = '';
+      transactionsDiv.innerHTML = '';
+
+      if (!walletAddress) {
+        errorDiv.textContent = 'Please enter a wallet address.';
+        return;
+      }
+
+      try {
+        const transactions = await fetchTransactions(walletAddress);
+
+        if (transactions.length === 0) {
+          transactionsDiv.innerHTML = '<p>No transactions found for this wallet.</p>';
+          return;
+        }
+
+        transactions.forEach(tx => {
+          const txDiv = document.createElement('div');
+          txDiv.className = 'transaction';
+          txDiv.innerHTML = `
+            <p><strong>Type:</strong> ${tx.tx.TransactionType}</p>
+            <p><strong>Hash:</strong> ${tx.tx.hash}</p>
+            <p><strong>Amount:</strong> ${tx.tx.Amount || 'N/A'}</p>
+            <p><strong>Date:</strong> ${new Date(tx.tx.date || tx.date).toLocaleString()}</p>
+          `;
+          transactionsDiv.appendChild(txDiv);
+        });
+      } catch (error) {
+        errorDiv.textContent = `Error fetching transactions: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
